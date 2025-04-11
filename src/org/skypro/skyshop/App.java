@@ -1,43 +1,30 @@
 package org.skypro.skyshop;
 
-import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.basket.ProductBasket;
+import org.skypro.skyshop.product.DiscountedProduct;
+import org.skypro.skyshop.product.FixPriceProduct;
+import org.skypro.skyshop.product.SimpleProduct;
 
 public class App {
     public static void main(String[] args) {
-        Product product1 = new Product("Ноутбук", 100000);
-        Product product2 = new Product("Смартфон", 50000);
-        Product product3 = new Product("Наушники", 15000);
-        Product product4 = new Product("Мышь", 3000);
-        Product product5 = new Product("Клавиатура", 5000);
-        Product product6 = new Product("Монитор", 40000);
-
         ProductBasket basket = new ProductBasket();
 
-        basket.addProduct(product1);
-        basket.addProduct(product2);
-        basket.addProduct(product3);
-        basket.addProduct(product4);
-        basket.addProduct(product5);
+        // Добавляем разные типы товаров
+        basket.addProduct(new SimpleProduct("Ноутбук", 100000));
+        basket.addProduct(new DiscountedProduct("Смартфон", 50000, 10));
+        basket.addProduct(new SimpleProduct("Наушники", 15000));
+        basket.addProduct(new FixPriceProduct("Мышь"));
+        basket.addProduct(new DiscountedProduct("Клавиатура", 5000, 5));
+        basket.addProduct(new FixPriceProduct("Монитор"));
 
-        basket.addProduct(product6);
-
-        System.out.println("\nСодержимое корзины:");
+        System.out.println("Содержимое корзины:");
         basket.printBasket();
 
-        System.out.println("\nОбщая стоимость: " + basket.getTotalPrice() + " руб.");
-
         System.out.println("\nПоиск 'Наушники': " + basket.containsProduct("Наушники"));
-
         System.out.println("Поиск 'Монитор': " + basket.containsProduct("Монитор"));
 
         basket.clearBasket();
-
         System.out.println("\nПосле очистки:");
         basket.printBasket();
-
-        System.out.println("\nОбщая стоимость пустой корзины: " + basket.getTotalPrice() + " руб.");
-
-        System.out.println("\nПоиск 'Ноутбук' в пустой корзине: " + basket.containsProduct("Ноутбук"));
     }
 }
