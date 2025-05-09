@@ -1,25 +1,29 @@
 package org.skypro.skyshop.search;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SearchEngine {
-    private final List<Searchable> items = new ArrayList<>();
+    private final Map<String, Searchable> items = new HashMap<>();
 
+    // Добавление объекта в поисковый движок
     public void add(Searchable item) {
-        items.add(item);
+        items.put(item.getName(), item);
     }
 
-    public List<Searchable> search(String searchTerm) {
-        List<Searchable> results = new ArrayList<>();
-        for (Searchable item : items) {
-            if (item.getSearchTerm().toLowerCase().contains(searchTerm.toLowerCase())) {
-                results.add(item);
+    // Поиск с возвратом отсортированной Map
+    public Map<String, Searchable> search(String searchTerm) {
+        Map<String, Searchable> results = new TreeMap<>();
+        for (Map.Entry<String, Searchable> entry : items.entrySet()) {
+            if (entry.getKey().toLowerCase().contains(searchTerm.toLowerCase())) {
+                results.put(entry.getKey(), entry.getValue());
             }
         }
         return results;
     }
 
+    // Поиск наиболее подходящего объекта
     public Searchable searchBestMatch(String search) throws BestResultNotFound {
         if (search == null || search.isBlank()) {
             throw new BestResultNotFound("Поисковый запрос не может быть пустым или null");
@@ -28,7 +32,7 @@ public class SearchEngine {
         Searchable bestMatch = null;
         int maxCount = 0;
 
-        for (Searchable item : items) {
+        for (Searchable item : items.values()) {
             String term = item.getSearchTerm().toLowerCase();
             String searchLower = search.toLowerCase();
             int count = 0;
@@ -52,3 +56,4 @@ public class SearchEngine {
         return bestMatch;
     }
 }
+
