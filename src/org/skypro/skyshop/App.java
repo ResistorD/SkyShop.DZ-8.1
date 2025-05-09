@@ -10,33 +10,15 @@ import org.skypro.skyshop.search.BestResultNotFound;
 import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 
 public class App {
     public static void main(String[] args) {
         ProductBasket basket = new ProductBasket();
 
-        // Демонстрация ошибок валидации
-        try {
-            SimpleProduct p1 = new SimpleProduct("   ", 100);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Ошибка создания товара: " + e.getMessage());
-        }
-
-        try {
-            SimpleProduct p2 = new SimpleProduct("Телефон", 0);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Ошибка создания товара: " + e.getMessage());
-        }
-
-        try {
-            DiscountedProduct p3 = new DiscountedProduct("Скидочный товар", 500, 150);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Ошибка создания товара: " + e.getMessage());
-        }
-
-        // Товары
+        // Добавляем продукты в корзину
         SimpleProduct laptop = new SimpleProduct("Ноутбук", 100000);
         DiscountedProduct smartphone = new DiscountedProduct("Смартфон", 50000, 10);
         SimpleProduct headphones = new SimpleProduct("Наушники", 15000);
@@ -54,9 +36,9 @@ public class App {
         System.out.println("\nСодержимое корзины:");
         basket.printBasket();
 
-        System.out.println("\n=== Удаление 'Мышь' из корзины ===");
-        List<Product> removed = basket.removeProductByName("Мышь");
-
+        // Удаление продуктов
+        System.out.println("\n=== Удаление 'Клавиатура' из корзины ===");
+        List<Product> removed = basket.removeProductByName("Клавиатура");
         if (removed.isEmpty()) {
             System.out.println("Список пуст");
         } else {
@@ -70,21 +52,15 @@ public class App {
         System.out.println("\n=== Удаление 'Пылесос' (несуществующего) ===");
         List<Product> notFound = basket.removeProductByName("Пылесос");
 
-        if (notFound.isEmpty()) {
+        if (notFound == null || notFound.isEmpty()) {  // Проверяем на null и пустоту
             System.out.println("Список пуст");
         } else {
             System.out.println("Удалены:");
             notFound.forEach(System.out::println);
         }
 
+
         System.out.println("\nКорзина после второй попытки удаления:");
-        basket.printBasket();
-
-        System.out.println("\nПоиск 'Наушники': " + basket.containsProduct("Наушники"));
-        System.out.println("Поиск 'Монитор': " + basket.containsProduct("Монитор"));
-
-        basket.clearBasket();
-        System.out.println("\nПосле очистки:");
         basket.printBasket();
 
         // -----------------------------------------------
@@ -107,17 +83,12 @@ public class App {
         engine.add(new Article("Клавиатуры и комфорт", "Что важно знать при выборе клавиатуры"));
         engine.add(new Article("Мониторы 4K", "Зачем нужен 4K-монитор в 2025 году"));
 
+        // Поиск по запросам
         System.out.println("\n=== Результаты поиска по запросу 'мышь' ===");
         printResults(engine.search("мышь"));
 
-        System.out.println("\n=== Результаты поиска по запросу 'лучшие' ===");
-        printResults(engine.search("лучшие"));
-
         System.out.println("\n=== Результаты поиска по запросу 'ноутбук' ===");
         printResults(engine.search("ноутбук"));
-
-        System.out.println("\n=== Результаты поиска по запросу 'не существует' ===");
-        printResults(engine.search("не существует"));
 
         System.out.println("\n=== Поиск наиболее подходящего ===");
         try {
@@ -134,30 +105,14 @@ public class App {
         } catch (BestResultNotFound e) {
             System.out.println("Ошибка: " + e.getMessage());
         }
-
-        System.out.println("\n=== Самый подходящий результат по запросу 'ноутбук' ===");
-        try {
-            Searchable best = engine.searchBestMatch("ноутбук");
-            System.out.println(best.getStringRepresentation());
-        } catch (BestResultNotFound e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
-
-        System.out.println("\n=== Самый подходящий результат по запросу 'не существует' ===");
-        try {
-            Searchable best = engine.searchBestMatch("не существует");
-            System.out.println(best.getStringRepresentation());
-        } catch (BestResultNotFound e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
     }
 
-    private static void printResults(List<Searchable> results) {
+    // Вывод результатов поиска
+    private static void printResults(Map<String, Searchable> results) {
         if (results.isEmpty()) {
             System.out.println("Ничего не найдено.");
         } else {
-            results.forEach(r -> System.out.println(r.getStringRepresentation()));
+            results.forEach((key, value) -> System.out.println(value.getStringRepresentation()));
         }
     }
-
 }
