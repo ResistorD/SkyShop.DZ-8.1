@@ -1,30 +1,20 @@
 package org.skypro.skyshop.search;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchEngine {
-    private Searchable[] items;
-    private int size = 0;
-
-    public SearchEngine(int capacity) {
-        this.items = new Searchable[capacity];
-    }
+    private final List<Searchable> items = new ArrayList<>();
 
     public void add(Searchable item) {
-        if (size >= items.length) {
-            // Автоматическое расширение массива, если нужно
-            items = Arrays.copyOf(items, items.length * 2);
-        }
-        items[size++] = item;
+        items.add(item);
     }
 
-    public Searchable[] search(String searchTerm) {
-        Searchable[] results = new Searchable[5];
-        int count = 0;
-        for (int i = 0; i < size; i++) {
-            if (items[i].getSearchTerm().toLowerCase().contains(searchTerm.toLowerCase())) {
-                results[count++] = items[i];
-                if (count == 5) break;
+    public List<Searchable> search(String searchTerm) {
+        List<Searchable> results = new ArrayList<>();
+        for (Searchable item : items) {
+            if (item.getSearchTerm().toLowerCase().contains(searchTerm.toLowerCase())) {
+                results.add(item);
             }
         }
         return results;
@@ -39,21 +29,19 @@ public class SearchEngine {
         int maxCount = 0;
 
         for (Searchable item : items) {
-            if (item != null) {
-                String term = item.getSearchTerm().toLowerCase();
-                String searchLower = search.toLowerCase();
-                int count = 0;
-                int index = 0;
+            String term = item.getSearchTerm().toLowerCase();
+            String searchLower = search.toLowerCase();
+            int count = 0;
+            int index = 0;
 
-                while ((index = term.indexOf(searchLower, index)) != -1) {
-                    count++;
-                    index += searchLower.length();
-                }
+            while ((index = term.indexOf(searchLower, index)) != -1) {
+                count++;
+                index += searchLower.length();
+            }
 
-                if (count > maxCount) {
-                    maxCount = count;
-                    bestMatch = item;
-                }
+            if (count > maxCount) {
+                maxCount = count;
+                bestMatch = item;
             }
         }
 
@@ -63,5 +51,4 @@ public class SearchEngine {
 
         return bestMatch;
     }
-
 }

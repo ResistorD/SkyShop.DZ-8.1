@@ -3,6 +3,7 @@ package org.skypro.skyshop.basket;
 import org.skypro.skyshop.product.Product;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ProductBasket {
@@ -36,5 +37,20 @@ public class ProductBasket {
                 .filter(Product::isSpecial)
                 .count();
         System.out.printf("Специальных товаров: %d%n", specialCount);
+    }
+
+    public List<Product> removeProductByName(String name) {
+        List<Product> removed = new ArrayList<>();
+        Iterator<Product> iterator = products.iterator();
+
+        while (iterator.hasNext()) {
+            Product product = iterator.next();
+            if (product.getName().equals(name)) {
+                removed.add(product);
+                iterator.remove();
+            }
+        }
+
+        return removed;
     }
 }

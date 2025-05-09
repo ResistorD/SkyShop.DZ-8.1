@@ -3,6 +3,7 @@ package org.skypro.skyshop;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
+import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.search.Article;
 import org.skypro.skyshop.search.BestResultNotFound;
@@ -10,6 +11,7 @@ import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class App {
     public static void main(String[] args) {
@@ -52,6 +54,32 @@ public class App {
         System.out.println("\nСодержимое корзины:");
         basket.printBasket();
 
+        System.out.println("\n=== Удаление 'Мышь' из корзины ===");
+        List<Product> removed = basket.removeProductByName("Мышь");
+
+        if (removed.isEmpty()) {
+            System.out.println("Список пуст");
+        } else {
+            System.out.println("Удалены следующие продукты:");
+            removed.forEach(System.out::println);
+        }
+
+        System.out.println("\nСодержимое корзины после удаления:");
+        basket.printBasket();
+
+        System.out.println("\n=== Удаление 'Пылесос' (несуществующего) ===");
+        List<Product> notFound = basket.removeProductByName("Пылесос");
+
+        if (notFound.isEmpty()) {
+            System.out.println("Список пуст");
+        } else {
+            System.out.println("Удалены:");
+            notFound.forEach(System.out::println);
+        }
+
+        System.out.println("\nКорзина после второй попытки удаления:");
+        basket.printBasket();
+
         System.out.println("\nПоиск 'Наушники': " + basket.containsProduct("Наушники"));
         System.out.println("Поиск 'Монитор': " + basket.containsProduct("Монитор"));
 
@@ -61,7 +89,7 @@ public class App {
 
         // -----------------------------------------------
         // Поисковый движок
-        SearchEngine engine = new SearchEngine(20);
+        SearchEngine engine = new SearchEngine();
 
         // Добавляем продукты
         engine.add(laptop);
@@ -124,9 +152,12 @@ public class App {
         }
     }
 
-    private static void printResults(Searchable[] results) {
-        Arrays.stream(results)
-                .filter(r -> r != null)
-                .forEach(r -> System.out.println(r.getStringRepresentation()));
+    private static void printResults(List<Searchable> results) {
+        if (results.isEmpty()) {
+            System.out.println("Ничего не найдено.");
+        } else {
+            results.forEach(r -> System.out.println(r.getStringRepresentation()));
+        }
     }
+
 }
