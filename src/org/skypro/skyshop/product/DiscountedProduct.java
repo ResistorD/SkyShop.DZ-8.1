@@ -31,4 +31,9 @@ public class DiscountedProduct extends Product {
         return String.format("%s: %.2f руб. (скидка %d%%)",
                 getName(), getPrice(), discountPercent);
     }
+
+    @Override
+    public String getContentType() {
+        return "PRODUCT";
+    }
 }
