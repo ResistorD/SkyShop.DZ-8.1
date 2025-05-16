@@ -18,11 +18,16 @@ public class SimpleProduct extends Product {
 
     @Override
     public boolean isSpecial() {
-        return false;
+                return false;
     }
 
     @Override
     public String toString() {
-        return String.format("%s: %.2f руб.", getName(), price);
+                return String.format("%s: %.2f руб.", getName(), price);
+    }
+
+    @Override
+    public String getContentType() {
+        return "PRODUCT";
     }
 }

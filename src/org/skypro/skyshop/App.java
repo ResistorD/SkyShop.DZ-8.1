@@ -9,9 +9,8 @@ import org.skypro.skyshop.search.Article;
 import org.skypro.skyshop.search.BestResultNotFound;
 import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
-
+import java.util.Set;
 import java.util.List;
-import java.util.Map;
 
 
 public class App {
@@ -108,11 +107,12 @@ public class App {
     }
 
     // Вывод результатов поиска
-    private static void printResults(Map<String, Searchable> results) {
+    private static void printResults(Set<Searchable> results) {
         if (results.isEmpty()) {
             System.out.println("Ничего не найдено.");
         } else {
-            results.forEach((key, value) -> System.out.println(value.getStringRepresentation()));
+            results.forEach(r -> System.out.println(r.getStringRepresentation()));
         }
     }
+
 }

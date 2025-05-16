@@ -22,4 +22,9 @@ public class FixPriceProduct extends Product {
         return String.format("%s: Фиксированная цена %.2f руб.",
                 getName(), FIXED_PRICE);
     }
+
+    @Override
+    public String getContentType() {
+        return "PRODUCT";
+    }
 }

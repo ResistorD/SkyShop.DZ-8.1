@@ -1,23 +1,24 @@
 package org.skypro.skyshop.search;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
+import org.skypro.skyshop.search.SearchableComparator;
 
 public class SearchEngine {
-    private final Map<String, Searchable> items = new HashMap<>();
+    private final Set<Searchable> items = new HashSet<>();
 
-    // Добавление объекта в поисковый движок
+    // Добавление объекта в поисковый движок (без дубликатов)
     public void add(Searchable item) {
-        items.put(item.getName(), item);
+        items.add(item);  // HashSet сам предотвращает дубли
     }
 
-    // Поиск с возвратом отсортированной Map
-    public Map<String, Searchable> search(String searchTerm) {
-        Map<String, Searchable> results = new TreeMap<>();
-        for (Map.Entry<String, Searchable> entry : items.entrySet()) {
-            if (entry.getKey().toLowerCase().contains(searchTerm.toLowerCase())) {
-                results.put(entry.getKey(), entry.getValue());
+    // Поиск всех подходящих объектов с сортировкой
+    public Set<Searchable> search(String searchTerm) {
+        Set<Searchable> results = new TreeSet<>(new SearchableComparator());
+        for (Searchable item : items) {
+            if (item.getSearchTerm().toLowerCase().contains(searchTerm.toLowerCase())) {
+                results.add(item);
             }
         }
         return results;
@@ -32,7 +33,7 @@ public class SearchEngine {
         Searchable bestMatch = null;
         int maxCount = 0;
 
-        for (Searchable item : items.values()) {
+        for (Searchable item : items) {
             String term = item.getSearchTerm().toLowerCase();
             String searchLower = search.toLowerCase();
             int count = 0;
@@ -56,4 +57,3 @@ public class SearchEngine {
         return bestMatch;
     }
 }
-
