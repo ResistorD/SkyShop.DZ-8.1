@@ -40,16 +40,19 @@ public class ProductBasket {
             return;
         }
 
-        products.forEach((name, productList) -> productList.forEach(product ->
-                System.out.println(product.getStringRepresentation())));
+        products.values().stream()
+                .flatMap(List::stream)
+                .forEach(System.out::println);
 
         System.out.printf("Итого: %.2f руб.%n", getTotalPrice());
+        System.out.printf("Специальных товаров: %d%n", getSpecialCount());
+    }
 
-        long specialCount = products.values().stream()
+    private long getSpecialCount() {
+        return products.values().stream()
                 .flatMap(List::stream)
                 .filter(Product::isSpecial)
                 .count();
-        System.out.printf("Специальных товаров: %d%n", specialCount);
     }
 
     // Удаление всех продуктов с заданным именем
